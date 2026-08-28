@@ -1,0 +1,351 @@
+<title>Ready Is Loading</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!--
+  GETTRIREADY — PRE-LAUNCH HOLDING PAGE
+  ======================================
+  TO ACTIVATE THIS PAGE, RICHARD NEEDS TO:
+
+  1. Wire the email form. It currently posts to a placeholder endpoint.
+     Fastest options: create a form at https://formspree.io (free tier
+     covers this easily) and swap FORM_ENDPOINT below for your form URL.
+     A Google Form or Mailchimp signup URL work too — just swap the
+     <form action> and method, or replace the JS submit handler with a
+     redirect to your form's URL.
+
+  2. Set the launch date once it's locked. Find LAUNCH_DATE in the
+     <script> below and set it to an ISO date, e.g. "2026-10-07T09:00:00+01:00".
+     Until it's set, the countdown block stays hidden — no fake urgency.
+
+  See the campaign brief for the full rollout plan this page fits into.
+-->
+
+<style>
+  :root {
+    --bg: #080c17;
+    --surface: #0f1526;
+    --surface-2: #141b2e;
+    --border: #1e2740;
+    --fg: #f3f5f7;
+    --muted: #93a2b8;
+    --accent: #17d6f8;
+    --accent-55: rgba(23, 214, 248, 0.55);
+    --accent-80: rgba(23, 214, 248, 0.8);
+    --radius: 0.5rem;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 640px;
+    padding: clamp(2.5rem, 8vw, 5rem) 1.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .eyebrow strong {
+    color: var(--fg);
+    font-weight: 700;
+  }
+
+  /* ---- the mark: ellipsis that ascends into the logo's three bars ---- */
+  .mark {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(0.9rem, 3vw, 1.35rem);
+    height: clamp(120px, 26vw, 216px);
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+  }
+
+  .pillar {
+    width: clamp(38px, 9vw, 64px);
+    background: var(--accent);
+    height: clamp(38px, 9vw, 64px);
+    border-radius: clamp(19px, 4.5vw, 32px);
+    animation: ascend 8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  .pillar.b1 { opacity: 0.55; animation-delay: 0s; }
+  .pillar.b2 { opacity: 0.8; animation-delay: 0.18s; }
+  .pillar.b3 { opacity: 1; animation-delay: 0.36s; }
+
+  @keyframes ascend {
+    0%, 14%   { height: clamp(38px, 9vw, 64px); border-radius: clamp(19px, 4.5vw, 32px); }
+    38%, 62%  { height: var(--h); border-radius: var(--r); }
+    86%, 100% { height: clamp(38px, 9vw, 64px); border-radius: clamp(19px, 4.5vw, 32px); }
+  }
+
+  .pillar.b1 { --h: clamp(58px, 13vw, 96px);  --r: clamp(17px, 4vw, 29px); }
+  .pillar.b2 { --h: clamp(94px, 21vw, 156px); --r: clamp(17px, 4vw, 29px); }
+  .pillar.b3 { --h: clamp(130px, 29vw, 216px); --r: clamp(17px, 4vw, 29px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pillar { animation: none; height: var(--h); border-radius: var(--r); }
+  }
+
+  h1 {
+    font-size: clamp(2rem, 6.5vw, 3.25rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+
+  .sub {
+    font-size: clamp(1rem, 2.4vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 34rem;
+    margin: 0 0 clamp(2rem, 5vw, 2.75rem);
+    text-wrap: pretty;
+  }
+
+  form.signup {
+    width: 100%;
+    max-width: 26rem;
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+  }
+
+  input[type="email"] {
+    flex: 1;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.85rem 1rem;
+    font: inherit;
+    color: var(--fg);
+  }
+  input[type="email"]::placeholder { color: var(--muted); }
+
+  button.cta {
+    background: var(--accent);
+    color: #051019;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.85rem 1.35rem;
+    font: inherit;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  button.cta:hover { filter: brightness(1.08); }
+  button.cta:disabled { opacity: 0.6; cursor: default; }
+
+  .micro {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .status {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0.9rem 0 0;
+    min-height: 1.2em;
+  }
+  .status[data-state="ok"] { color: var(--accent); }
+  .status[data-state="err"] { color: #ff8a8a; }
+
+  .countdown {
+    display: none;
+    gap: clamp(0.75rem, 3vw, 1.5rem);
+    margin-top: clamp(2.5rem, 6vw, 3.5rem);
+  }
+  .countdown.is-active { display: flex; }
+  .countdown div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 3.25rem;
+  }
+  .countdown strong {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .countdown span {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  footer {
+    width: 100%;
+    border-top: 1px solid var(--border);
+    padding: clamp(1.5rem, 4vw, 2rem) 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    text-align: center;
+  }
+
+  .proof {
+    font-size: 0.82rem;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .proof strong { color: var(--fg); font-weight: 700; }
+
+  .social {
+    display: flex;
+    gap: 1.1rem;
+    font-size: 0.8rem;
+  }
+  .social a { color: var(--muted); text-decoration: none; font-weight: 600; }
+  .social a:hover { color: var(--accent); }
+
+  @media (max-width: 420px) {
+    form.signup { flex-direction: column; }
+    button.cta { width: 100%; }
+  }
+</style>
+
+<div class="page">
+  <p class="eyebrow"><strong>GetTriReady</strong> — coming soon</p>
+
+  <div class="mark" aria-hidden="true">
+    <div class="pillar b1"></div>
+    <div class="pillar b2"></div>
+    <div class="pillar b3"></div>
+  </div>
+
+  <h1>Ready is loading.</h1>
+  <p class="sub">
+    Built by two Ironman coaches who trained the AI behind it and still check its work.
+    A plan for your race and your course. Nutrition on every session. Nothing rewritten
+    behind your back.
+  </p>
+
+  <form class="signup" id="signupForm" action="FORM_ENDPOINT" method="POST">
+    <label for="email" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Email address</label>
+    <input id="email" name="email" type="email" placeholder="you@example.com" required autocomplete="email">
+    <button class="cta" type="submit">Register your interest</button>
+  </form>
+  <p class="micro">No spam. Just a heads-up the day we open the gates.</p>
+  <p class="status" id="formStatus" role="status" aria-live="polite"></p>
+
+  <div class="countdown" id="countdown">
+    <div><strong id="cd-d">00</strong><span>Days</span></div>
+    <div><strong id="cd-h">00</strong><span>Hrs</span></div>
+    <div><strong id="cd-m">00</strong><span>Min</span></div>
+    <div><strong id="cd-s">00</strong><span>Sec</span></div>
+  </div>
+</div>
+
+<footer>
+  <p class="proof"><strong>12</strong> Ironman finishes combined &middot; <strong>2</strong> GB age-group triathletes &middot; <strong>1</strong> qualified physiotherapist</p>
+  <nav class="social">
+    <a href="#" id="link-instagram">Instagram</a>
+    <a href="#" id="link-linkedin">LinkedIn</a>
+  </nav>
+</footer>
+
+<script>
+  // ---- 1. Set this once the launch date is locked. Leave null to hide the countdown. ----
+  const LAUNCH_DATE = null; // e.g. "2026-10-07T09:00:00+01:00"
+
+  if (LAUNCH_DATE) {
+    const target = new Date(LAUNCH_DATE).getTime();
+    const el = document.getElementById('countdown');
+    el.classList.add('is-active');
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) { el.querySelectorAll('strong').forEach(s => s.textContent = '00'); return; }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('cd-d').textContent = String(d).padStart(2, '0');
+      document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
+      document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
+      document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  // ---- 2. Swap these for your real profile URLs when they exist. ----
+  document.getElementById('link-instagram').href = '#';
+  document.getElementById('link-linkedin').href = '#';
+
+  // ---- 3. Form handling: tries the configured endpoint, falls back gracefully. ----
+  const form = document.getElementById('signupForm');
+  const status = document.getElementById('formStatus');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const button = form.querySelector('button');
+    const endpointConfigured = form.getAttribute('action') && form.getAttribute('action') !== 'FORM_ENDPOINT';
+
+    if (!endpointConfigured) {
+      status.dataset.state = 'err';
+      status.textContent = 'Form not connected yet — see the HTML comment at the top of this file.';
+      return;
+    }
+
+    button.disabled = true;
+    try {
+      const res = await fetch(form.action, {
+        method: form.method,
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        status.dataset.state = 'ok';
+        status.textContent = "You're on the list. See you at the start line.";
+        form.reset();
+      } else {
+        throw new Error('bad response');
+      }
+    } catch (err) {
+      status.dataset.state = 'err';
+      status.textContent = "Something went wrong — try again, or email hello@gettriready.co.uk.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
